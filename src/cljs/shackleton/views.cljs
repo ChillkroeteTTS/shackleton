@@ -30,7 +30,8 @@
         [:section {:id "kartesian" :style {:position :absolute :top 0 :left 0 :right 0 :height (str (int (* 100 svg-height)) "%") :background-color "white"}}
          [:svg {:style {:width "100%" :height "100%"}}
           [svgcs/background w h x-max y-max]
-          (into [:g] (map (fn [el] [el/element-transducer hw hh x->svg y->svg el]) @elements))]
+          (into [:g]
+                (map (fn [el] [el/element hw hh x->svg y->svg el]) @elements))]
          ]))))
 (defn bind-to-fn [atom] (fn [e] (reset! atom (.. e -target -value))))
 

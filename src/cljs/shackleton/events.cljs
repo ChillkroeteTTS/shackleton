@@ -10,7 +10,6 @@
 (rf/reg-event-db
   :delete-el
   (fn [db [_ dispatching-el]]
-    (prn dispatching-el)
     (assoc db :elements
               (remove (fn [el] (= (db/element-hash dispatching-el) (db/element-hash el)))
                       (:elements db)))))
