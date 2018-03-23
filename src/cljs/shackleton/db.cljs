@@ -9,3 +9,6 @@
                :link  "http://dummmy2"
                :x     -30
                :y     -150}]})
+
+(defn element-hash [{:keys [title x y]}]
+  (hash (str title x y)))

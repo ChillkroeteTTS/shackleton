@@ -20,7 +20,7 @@
                    (conj agg
                      [:line {:x1 (- hw disc-mark-height) :y1 y :x2 (+ hw disc-mark-height) :y2 y :stroke "rgb(0,0,0)" :stroke-width disc-mark-stroke}]
                      [:text {:x (- hw disc-mark-height disc-mark-text-gap) :y y :text-anchor "end" :alignment-baseline "middle"} (str (int (svg->kart-y hh y-max y)))])))
-               [] (range (+ 1 disc-marks-ps)))))
+               [] (range disc-marks-ps))))
 (defn disc-mark-cross [hw hh]
   (let [diag-fn (fn [hd op] (op hd disc-mark-height))]
     [
