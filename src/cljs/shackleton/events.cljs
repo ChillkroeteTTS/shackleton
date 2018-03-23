@@ -8,8 +8,18 @@
    db/default-db))
 
 (rf/reg-event-db
-  :delete-el-by-hash
-  (fn [db [_ hash]]
+  :delete-el
+  (fn [db [_ dispatching-el]]
+    (prn dispatching-el)
     (assoc db :elements
-              (remove (fn [el] (= hash (db/element-hash el)))
+              (remove (fn [el] (= (db/element-hash dispatching-el) (db/element-hash el)))
                       (:elements db)))))
+
+(rf/reg-event-db
+  :add-el
+  (fn [db [_ title x y link]]
+    (assoc db :elements
+              (conj (:elements db) {:title title
+                                    :x x
+                                    :y y
+                                    :link link}))))
