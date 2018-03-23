@@ -2,6 +2,7 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.908"]
                  [reagent "0.7.0"]
+                 [org.clojure/core.async "0.4.474"]
                  [re-frame "0.10.5"]]
 
   :plugins [[lein-cljsbuild "1.1.5"]]
