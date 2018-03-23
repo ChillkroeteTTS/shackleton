@@ -13,11 +13,14 @@
 
   :clean-targets ^{:protect false} ["resources/public/js/compiled" "target"]
 
-  :figwheel {:css-dirs ["resources/public/css"]}
+  :figwheel {:css-dirs ["resources/public/css"]
+             :nrepl-port 7888}
 
   :profiles
   {:dev
-   {:dependencies [[binaryage/devtools "0.9.4"]]
+   {:dependencies [[binaryage/devtools "0.9.4"]
+                   [com.cemerick/piggieback "0.2.1"]
+                   [figwheel-sidecar "0.5.8"]]
 
     :plugins      [[lein-figwheel "0.5.13"]]}}
 
