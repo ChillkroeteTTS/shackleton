@@ -1,31 +1,61 @@
 (ns shackleton.views
-  (:require [re-frame.core :as re-frame]
+  (:require [reagent.core :as r]
+            [re-frame.core :as rf]
             [shackleton.subs :as subs]
+            [shackleton.svg.coordinate-system :as svgcs]
             ))
 
 (def svg-height 0.8)
 
-(defn x->svg [swidth x] (+ (* x (/ swidth 2.0)) (/ swidth 2.0)))
-(defn y->svg [sheight y] (+ (* y (/ sheight 2.0)) (/ sheight 2.0)))
+(defn kart-x->svg [w x-max x] (* (/ (+ x-max x) (* x-max 2)) w))
+(defn kart-y->svg [h y-max y] (* (- 1 (/ (+ y-max y) (* y-max 2))) h))
 
-(defn kartesian []
-  (let [w js/innerWidth
+(def info-box-w 80)
+(def info-box-hw (/ info-box-w 2))
+(def info-box-h 50)
+(def info-box-hh (/ info-box-h 2))
+(def info-box-marker-stroke 1)
+
+(def selected-element (r/atom nil))
+
+(defn matrix []
+  (let [elements (rf/subscribe [:elements])
+        w js/innerWidth
         h (* svg-height js/innerHeight)
         hw (/ w 2)
         hh (/ h 2)
-        x->svg (partial x->svg w)
-        y->svg (partial y->svg h)
+        x->svg (partial kart-x->svg w 500)
+        y->svg (partial kart-y->svg h 300)
         center {:x (x->svg 0) :y (y->svg 0)}]
-    [:section {:id "kartesian" :style {:position :absolute :top 0 :width "100%" :height (str (int (* 100 svg-height)) "%") :background-color "#EEEEEE"}}
-     [:svg {:style {:width "100%" :height "100%"}}
-      [:line {:x1 hw :y1 h :x2 hw :y2 0 :stroke "rgb(0,0,0)" :stroke-width 1}]
-      [:line {:x1 0 :y1 hh :x2 w :y2 hh :stroke "rgb(0,0,0)" :stroke-width 1}]
-      [:circle {:cx hw :cy h :r 20}]
-      ]]))
+    [:section {:id "kartesian" :style {:position :absolute :top 0 :left 0 :right 0 :height (str (int (* 100 svg-height)) "%") :background-color "white"}}
+     (into [] (concat [:svg {:style {:width "100%" :height "100%"}}]
+                      (svgcs/background w h)
+                      (reduce (fn [agg {:keys [title link x y]}]
+                                (let [svgx (x->svg x)
+                                      svgy (y->svg y)
+                                      hash (hash (str title x y))]
+                                  (conj agg
+                                        [:line {:x1 svgx :y1 svgy :x2 hw :y2 svgy :stroke "rgb(0,0,0)" :stroke-width info-box-marker-stroke}]
+                                        [:line {:x1 svgx :y1 svgy :x2 svgx :y2 hh :stroke "rgb(0,0,0)" :stroke-width info-box-marker-stroke}]
+                                        [:g {:transform (str "translate(" (- svgx info-box-hw) "," (- svgy info-box-hh) ")") :width info-box-w :height info-box-h}
+                                         [:foreignObject {:x 0 :y 0 :width info-box-w :height info-box-h}
+                                          (into [] (concat
+                                                     [:div {:style          {:background-color "#EEEEEE" :display :flex :flex-direction "column"
+                                                                             :border           "solid 1px" :padding 2}
+                                                            :on-mouse-enter (fn [] (reset! selected-element hash))
+                                                            :on-mouse-leave (fn [] (reset! selected-element nil))}
+                                                      [:text title]]
+                                                     (if (= hash @selected-element)
+                                                       [[:text (str x)]
+                                                        [:text (str y)]]
+                                                       [])))]
+                                         ])))
+                              [] @elements)))
+
+     ]))
 
 (defn main-panel []
-  (let [name (re-frame/subscribe [::subs/name])]
-    [:div {:style {:display :flex :flex-direction :column}}
-     [:div "Hello from " @name]
-     [kartesian]
-     [:section {:id "menu" :style {:height "20%" :position :absolute :bottom 0}}]]))
+  [:div {:style {:display :flex :flex-direction :column}}
+   [matrix]
+   [:section {:id "menu" :style {:height "20%" :left 0 :right 0 :position :absolute :bottom 0 :background-color "#EEEEEE"}}
+    [:text "hello"]]])
