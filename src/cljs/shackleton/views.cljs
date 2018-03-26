@@ -45,7 +45,7 @@
         validate-i-fn (fn [fn] (reset! valid-i? (not (or (empty? @x-i) (empty? @y-i)))) fn)
         input-changed-fn (comp validate-i-fn bind-to-fn)]
     (fn [active-dialog]
-      [:div.dialog.add-element
+      [:div.dialog.menu.add-element
        [:div.label-input-gr
         [:text "Title"]
         [:input {:value @title-i :on-input (input-changed-fn title-i)}]]
@@ -72,7 +72,7 @@
   (let [db-hash (rf/subscribe [:db-as-hash])
         i-db-hash (r/atom "")]
     (fn [active-dialog]
-      [:div.dialog
+      [:div.dialog.menu
        [:div.label-input-gr
         [:text "Export"]
         [:text.explanation "Use this text to restore your session below."]

@@ -9,23 +9,19 @@
 (def info-box-hh (/ info-box-h 2))
 (def info-box-marker-stroke 1)
 
+(def font-awesome (r/adapt-react-class (aget js/window "deps" "react-fontawesome")))
+
 (defn tt-first-row [title show? el]
-  [:div {:style {:display :flex :flex-direction "row"}}
-   [:text {:style {:font-weight "bold" :flex-grow 2 :align-self "flex-start"}}
-    title]
+  [:div.elem-headline
+   [:text title]
    (when @show?
-     [:g
-      ;;[:button {:class "edit-button" :style {}} "e"]
-      [:button {:class    "delete-button"
-                :on-click (fn [] (rf/dispatch [:delete-el el]))} "x"]])])
+     [:button {:on-click (fn [] (rf/dispatch [:delete-el el]))}
+      [font-awesome {:name "times"}]])])
 
 (defn tooltip [{:keys [title link x y] :as el} show?]
   [:foreignObject {:x 0 :y 0 :width info-box-w :height (if @show? 200 50)}
-   [:div {:style          {:background-color "#FFFFFF" :display :flex :flex-direction "column"
-                           :justify-content  "flex-end" :border-radius 3
-                           :border           "solid 1px" :padding 6}
-          :on-mouse-enter (fn [] (reset! show? true))
-          :on-mouse-leave (fn [] (reset! show? false))}
+   [:div.dialog.element {:on-mouse-enter (fn [] (reset! show? true))
+                         :on-mouse-leave (fn [] (reset! show? false))}
     [tt-first-row title show? el]
     (when @show?
       [:div {:style {:display :flex :flex-direction "column"}}
