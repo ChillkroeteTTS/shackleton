@@ -1,0 +1,21 @@
+{
+  "name": "shackleton",
+  "version": "1.0.0",
+  "description": "A [re-frame](https://github.com/Day8/re-frame) application designed to ... well, that part is up to you.",
+  "main": "webpack.config.js",
+  "dependencies": {
+    "font-awesome": "^4.7.0",
+    "react": "15.5.4",
+    "react-dom": "15.5.4",
+    "react-fontawesome": "^1.6.1",
+    "webpack": "1.13.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "watch": "webpack -d --watch",
+    "build": "webpack -p"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

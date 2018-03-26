@@ -38,12 +38,12 @@
    [:line {:x1 svgx :y1 svgy :x2 svgx :y2 hh :stroke "rgb(0,0,0)" :stroke-dasharray "10,10" :stroke-width info-box-marker-stroke}]])
 
 (defn element [hw hh x->svg y->svg {:keys [title link x y] :as el}]
-  (let [svgx (x->svg x)
-        svgy (y->svg y)
-        show? (r/atom false)]
-    (fn []
-      [:g
-       [pointing-lines svgx svgy hw hh]
-       [:g {:transform (str "translate(" (- svgx info-box-hw) "," (- svgy 12) ")") :width info-box-w :height info-box-h}
-        [tooltip el show?]
-        ]])))
+  (let [show? (r/atom false)]
+    (fn [hw hh x->svg y->svg {:keys [title link x y] :as el}]
+      (let [svgx (x->svg x)
+            svgy (y->svg y)]
+        [:g
+         [pointing-lines svgx svgy hw hh]
+         [:g {:transform (str "translate(" (- svgx info-box-hw) "," (- svgy 12) ")") :width info-box-w :height info-box-h}
+          [tooltip el show?]
+          ]]))))

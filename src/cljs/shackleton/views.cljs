@@ -7,18 +7,18 @@
             [shackleton.db :as db]))
 
 (def svg-height 1)
+(def font-awesome (r/adapt-react-class (aget js/window "deps" "react-fontawesome")))
 
 (defn kart-x->svg [w x-max x] (* (/ (+ x-max x) (* x-max 2)) w))
 (defn kart-y->svg [h y-max y] (* (- 1 (/ (+ y-max y) (* y-max 2))) h))
 
 (def create-dialog (r/atom false))
 
-(defn matrix [x-max]
-  (let [elements (rf/subscribe [:elements])
-        selected-element (r/atom nil)]
+(defn matrix []
+  (let [elements (rf/subscribe [:elements])]
     (fn []
-      (let [x-max (Math/abs (apply max (map :x @elements)))
-            y-max (Math/abs (apply max (map :y @elements)))
+      (let [x-max (apply max (map (fn [el] (Math/abs (:x el))) @elements))
+            y-max (apply max (map (fn [el] (Math/abs (:y el))) @elements))
             w js/innerWidth
             h (* svg-height js/innerHeight)
             hw (/ w 2)
@@ -33,40 +33,47 @@
           (into [:g]
                 (map (fn [el] [el/element hw hh x->svg y->svg el]) @elements))]
          ]))))
+
 (defn bind-to-fn [atom] (fn [e] (reset! atom (.. e -target -value))))
 
-(defn creation-dialog []
+(defn add-element-dialog []
   (let [title-i (r/atom "")
         x-i (r/atom "")
         y-i (r/atom "")
-        link-i (r/atom "")]
+        link-i (r/atom "")
+        valid-i? (r/atom false)
+        validate-i-fn (fn [fn] (reset! valid-i? (not (or (empty? @x-i) (empty? @y-i)))) fn)
+        input-changed-fn (comp validate-i-fn bind-to-fn)]
     (fn []
-      [:div {:style {:position      :absolute :bottom 30 :right 30 :display :flex :flex-direction "column" :border "solid 1px rgb(186, 186, 186)"
-                     :padding       "5px"
-                     :border-radius 8}}
-       [:text "Title"]
-       [:input {:value @title-i :on-input (bind-to-fn title-i)}]
-       [:div {:style {:flex-direction "row"}}
-        [:text {:style {:margin-right 2.5}} "x"] [:input {:value @x-i :on-input (bind-to-fn x-i)}]
-        [:text {:style {:margin "0 2.5px 0 2.5px"}} "y"] [:input {:value @y-i :on-input (bind-to-fn y-i)}]]
-       [:text "Link (optional)"]
-       [:input {:value @link-i :on-input (bind-to-fn link-i)}]
-       [:div {:style {:display "flex" :flex-direction "row"}}
-        [:button {:style    {:border-radius 10 :font-size 43 :width 63}
-                  :on-click (fn [] (rf/dispatch [:add-el @title-i
-                                                 (cljs.reader/read-string @x-i)
-                                                 (cljs.reader/read-string @y-i)
-                                                 @link-i]) (reset! create-dialog false))} "o"]
-        [:button {:style    {:border-radius 10 :font-size 43 :width 63}
-                  :on-click (fn [] (reset! create-dialog false))} "x"]]])))
+      [:div.add-element
+       [:div.label-input-gr
+        [:text "Title"]
+        [:input {:value @title-i :on-input (input-changed-fn title-i)}]]
+       [:div.label-input-gr
+        [:text "x"]
+        [:input {:value @x-i :on-input (input-changed-fn x-i)}]]
+       [:div.label-input-gr
+        [:text "y"]
+        [:input {:value @y-i :on-input (input-changed-fn y-i)}]]
+       [:div.label-input-gr
+        [:text "Link (optional)"]
+        [:input {:value @link-i :on-input (input-changed-fn link-i)}]]
+       [:div.add-button-cont
+        [:button (merge {:on-click (fn [] (rf/dispatch [:add-el @title-i
+                                                        (cljs.reader/read-string @x-i)
+                                                        (cljs.reader/read-string @y-i)
+                                                        @link-i]) (reset! create-dialog false))}
+                        (if @valid-i? {} {:disabled "true"}))
+         [font-awesome {:name "plus"}]]
+        [:button {:on-click (fn [] (reset! create-dialog false))}
+         [font-awesome {:name "times"}]]]])))
 
 (defn main-panel []
   [:div {:style {:display :flex :flex-direction :column}}
    [matrix]
    (if @create-dialog
-     [creation-dialog]
-     [:button {:style    {:position      :absolute :bottom 30 :right 30
-                          :border-radius 10 :font-size 43 :width 63}
+     [add-element-dialog]
+     [:button {:style    {:position :absolute :bottom 30 :right 30}
                :on-click (fn [] (reset! create-dialog true))}
-      "+"])]
+      [font-awesome {:name "plus"}]])]
   )

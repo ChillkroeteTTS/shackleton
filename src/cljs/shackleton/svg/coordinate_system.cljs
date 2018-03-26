@@ -14,14 +14,14 @@
                   (fn [i]
                     (let [x (operator hw (* (+ 1 i) (/ hw disc-marks-ps)))]
                       [:g [:line {:x1 x :y1 (- hh disc-mark-height) :x2 x :y2 (+ hh disc-mark-height) :stroke "rgb(0,0,0)" :stroke-width disc-mark-stroke}]
-                       [:text {:x x :y (+ hh disc-mark-height disc-mark-text-gap) :text-anchor "middle" :alignment-baseline "before-edge"} (str (int (svg->kart-x hw x-max x)))]]))
+                       [:text {:x x :y (+ hh disc-mark-height disc-mark-text-gap) :text-anchor "middle" :dominant-baseline "text-before-edge"} (str (int (svg->kart-x hw x-max x)))]]))
                   (range (- disc-marks-ps 1)))
                 (map
                   (fn [i]
                     (let [y (operator hh (* (+ 1 i) (/ hh disc-marks-ps)))]
                       [:g
                        [:line {:x1 (- hw disc-mark-height) :y1 y :x2 (+ hw disc-mark-height) :y2 y :stroke "rgb(0,0,0)" :stroke-width disc-mark-stroke}]
-                       [:text {:x (- hw disc-mark-height disc-mark-text-gap) :y y :text-anchor "end" :alignment-baseline "middle"} (str (int (svg->kart-y hh y-max y)))]]))
+                       [:text {:x (- hw disc-mark-height disc-mark-text-gap) :y y :text-anchor "end" :dominant-baseline "middle"} (str (int (svg->kart-y hh y-max y)))]]))
                   (range (- disc-marks-ps 1))))))
 
 (defn disc-mark-cross [hw hh]
