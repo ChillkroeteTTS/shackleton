@@ -1,7 +1,7 @@
 #!/bin/bash -ex
 
 # requires js dependencies and binds them to window object
-npm run build
+npm run build-prod
 
 lein do clean, cljsbuild once min
 

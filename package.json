@@ -12,10 +12,13 @@
     "react-fontawesome": "^1.6.1",
     "webpack": "1.13.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "webpack-merge": "^4.1.2"
+  },
   "scripts": {
-    "watch": "webpack -d --watch",
-    "build": "webpack -p"
+    "watch": "webpack --config webpack.dev.js -d --watch",
+    "build": "webpack --config webpack.dev.js -p",
+    "build-prod": "webpack --config webpack.prod.js -p"
   },
   "keywords": [],
   "author": "",
