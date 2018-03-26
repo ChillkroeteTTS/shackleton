@@ -10,8 +10,8 @@ I was planning a hiking trip to sweden while I was searching for a good tarp as 
 While browsing different products I quickly lost track about which tarp was how waterproof and still ligthweight. Shackleton aims to solve this by letting the user choose which key figures he want to
 compare in a simple coordinate system.
 
-![](./readme-imgs/shop.png)
-![](./readme-imgs/shackleton.png)
+<img src="./readme-imgs/shop.png" width="50%">
+<img src="./readme-imgs/shackleton.png" width="50%">
 
 And of course I needed a project I could do to get in touch with Clojurescript.
 
