@@ -16,6 +16,8 @@
                   (.getElementById js/document "app")))
 
 (defn ^:export init []
-  (rf/dispatch-sync [::events/initialize-db])
+  (if config/debug?
+    (rf/dispatch-sync [::events/initialize-dev-db])
+    (rf/dispatch-sync [::events/initialize-db]))
   (dev-setup)
   (mount-root))

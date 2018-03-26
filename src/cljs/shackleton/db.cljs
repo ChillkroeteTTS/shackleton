@@ -1,6 +1,6 @@
 (ns shackleton.db)
 
-(def default-db
+(def default-dev-db
   {:elements [{:title "test1"
                :link  "http://dummmy"
                :x     50
@@ -9,6 +9,9 @@
                :link  "http://dummmy2"
                :x     -30
                :y     -150}]})
+
+(def default-db
+  (assoc default-dev-db :elements []))
 
 (defn element-hash [{:keys [title x y]}]
   (hash (str title x y)))

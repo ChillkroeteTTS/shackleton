@@ -6,7 +6,8 @@
             [shackleton.subs :as subs]
             [shackleton.svg.coordinate-system :as svgcs]
             [shackleton.svg.element :as el]
-            [shackleton.db :as db]))
+            [shackleton.db :as db]
+            [cljs.reader :as cljsr]))
 
 (def svg-height 1)
 (def font-awesome (r/adapt-react-class (aget js/window "deps" "react-fontawesome")))
@@ -60,8 +61,8 @@
         [:input {:value @link-i :on-input (input-changed-fn link-i)}]]
        [:div.bottom-button-cont
         [:button (merge {:on-click (fn [] (rf/dispatch [:add-el @title-i
-                                                        (cljs.reader/read-string @x-i)
-                                                        (cljs.reader/read-string @y-i)
+                                                        (cljsr/read-string @x-i)
+                                                        (cljsr/read-string @y-i)
                                                         @link-i]) (reset! active-dialog nil))}
                         (if @valid-i? {} {:disabled "true"}))
          [font-awesome {:name "plus"}]]

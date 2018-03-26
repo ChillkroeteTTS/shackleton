@@ -9,6 +9,11 @@
    db/default-db))
 
 (rf/reg-event-db
+ ::initialize-dev-db
+ (fn  [_ _]
+   db/default-dev-db))
+
+(rf/reg-event-db
   :delete-el
   (fn [db [_ dispatching-el]]
     (assoc db :elements

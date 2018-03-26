@@ -1,4 +1,5 @@
 /*.log
+*.DS_Store
 /target
 /*-init.clj
 /resources/public/js/compiled
