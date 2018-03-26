@@ -1,26 +1,18 @@
-# shackleton
+# Shackleton
+https://chillkroetetts.github.io/shackleton/
 
-A [re-frame](https://github.com/Day8/re-frame) application designed to ... well, that part is up to you.
+Simple client based tool to compare key figures from e.g. articles.
+Build entirely in Clojurescript with Reagent+Reframe.
+Named after the famous polar explorer Sir Ernest Henry Shackleton.
 
-## Development Mode
+## But why?
+I was planning a hiking trip to sweden while I was searching for a good tarp as raincover.
+While browsing different products I quickly lost track about which tarp was how waterproof and still ligthweight. Shackleton aims to solve this by letting the user choose which key figures he want to
+compare in a simple coordinate system.
 
-### Run application:
+![](./readme-imgs/shop.png)
+![](./readme-imgs/shackleton.png)
 
-```
-lein clean
-lein figwheel dev
-```
-
-Figwheel will automatically push cljs changes to the browser.
-
-Wait a bit, then browse to [http://localhost:3449](http://localhost:3449).
-
-## Production Build
+And of course I needed a project I could do to get in touch with Clojurescript.
 
 
-To compile clojurescript to javascript:
-
-```
-lein clean
-lein cljsbuild once min
-```
