@@ -5,6 +5,8 @@
   "main": "webpack.config.js",
   "dependencies": {
     "font-awesome": "^4.7.0",
+    "js-base64": "^2.4.3",
+    "npm": "^5.8.0",
     "react": "15.5.4",
     "react-dom": "15.5.4",
     "react-fontawesome": "^1.6.1",

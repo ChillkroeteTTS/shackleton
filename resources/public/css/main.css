@@ -1,43 +1,60 @@
-.add-element {
-    background-color: white;
-    padding: 9px 17px 9px 17px;
-    position: absolute;
-    bottom: 30px;
-    right: 30px;
-    display: flex;
-    flex-direction: column;
-    border: solid 1px rgb(186, 186, 186);
-    border-radius: 8px;
+.dialog {
+  background-color: white;
+  box-sizing: border-box;
+  padding: 9px 17px 9px 17px;
+  position: absolute;
+  bottom: 94px;
+  right: 30px;
+  display: flex;
+  width: 150px;
+  flex-direction: column;
+  border: solid 1px rgb(186, 186, 186);
+  border-radius: 8px;
 }
 
-.add-element > .label-input-gr {
+.dialog button {
+    font-size: 15px;
+    padding: 10px 14px;
+    width: auto;
+    height: auto;
+}
+
+.dialog .explanation {
+  font-size: 10px;
+  color: gray;
+}
+
+.dialog > .label-input-gr {
     margin: 10px 0 8px 0;
     display: flex;
     flex-direction: column;
 }
 
-.add-element > .label-input-gr  > text {
+.dialog > .label-input-gr  > text {
     margin: 0px 0px 5px 0px;
     font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
 }
 
-button {
-  background-color: white;
-  border-radius: 10px;
-  font-size: 30px;
-  width: 63px;
-  height: 63px;
-}
-
-.add-button-cont {
+.dialog > .bottom-button-cont {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-.add-element button {
-    font-size: 15px;
-    padding: 10px 14px;
-    width: auto;
-    height: auto;
+button {
+  background-color: white;
+  border-radius: 10px;
+  font-size: 25px;
+  width: 50px;
+  height: 50px;
+}
+
+.button-bar {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 120px;
 }

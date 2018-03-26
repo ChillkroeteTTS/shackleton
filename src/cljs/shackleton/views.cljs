@@ -1,6 +1,8 @@
 (ns shackleton.views
   (:require [reagent.core :as r]
             [re-frame.core :as rf]
+            [re-frame.db :as rfdb]
+            [cljs.source-map.base64 :as b64]
             [shackleton.subs :as subs]
             [shackleton.svg.coordinate-system :as svgcs]
             [shackleton.svg.element :as el]
@@ -11,8 +13,6 @@
 
 (defn kart-x->svg [w x-max x] (* (/ (+ x-max x) (* x-max 2)) w))
 (defn kart-y->svg [h y-max y] (* (- 1 (/ (+ y-max y) (* y-max 2))) h))
-
-(def create-dialog (r/atom false))
 
 (defn matrix []
   (let [elements (rf/subscribe [:elements])]
@@ -36,7 +36,7 @@
 
 (defn bind-to-fn [atom] (fn [e] (reset! atom (.. e -target -value))))
 
-(defn add-element-dialog []
+(defn add-element-dialog [active-dialog]
   (let [title-i (r/atom "")
         x-i (r/atom "")
         y-i (r/atom "")
@@ -44,8 +44,8 @@
         valid-i? (r/atom false)
         validate-i-fn (fn [fn] (reset! valid-i? (not (or (empty? @x-i) (empty? @y-i)))) fn)
         input-changed-fn (comp validate-i-fn bind-to-fn)]
-    (fn []
-      [:div.add-element
+    (fn [active-dialog]
+      [:div.dialog.add-element
        [:div.label-input-gr
         [:text "Title"]
         [:input {:value @title-i :on-input (input-changed-fn title-i)}]]
@@ -58,22 +58,48 @@
        [:div.label-input-gr
         [:text "Link (optional)"]
         [:input {:value @link-i :on-input (input-changed-fn link-i)}]]
-       [:div.add-button-cont
+       [:div.bottom-button-cont
         [:button (merge {:on-click (fn [] (rf/dispatch [:add-el @title-i
                                                         (cljs.reader/read-string @x-i)
                                                         (cljs.reader/read-string @y-i)
-                                                        @link-i]) (reset! create-dialog false))}
+                                                        @link-i]) (reset! active-dialog nil))}
                         (if @valid-i? {} {:disabled "true"}))
          [font-awesome {:name "plus"}]]
-        [:button {:on-click (fn [] (reset! create-dialog false))}
+        [:button {:on-click (fn [] (reset! active-dialog nil))}
          [font-awesome {:name "times"}]]]])))
 
+(defn share-dialog [active-dialog]
+  (let [db-hash (rf/subscribe [:db-as-hash])
+        i-db-hash (r/atom "")]
+    (fn [active-dialog]
+      [:div.dialog
+       [:div.label-input-gr
+        [:text "Export"]
+        [:text.explanation "Use this text to restore your session below."]
+        [:textarea {:id "state-hash" :value @db-hash :read-only true :style {:resize :none :background-color "#EEEEEE"} :rows 10}]]
+       [:div.label-input-gr
+        [:text "Import"]
+        [:textarea {:style {:resize :none} :on-input (bind-to-fn i-db-hash) :rows 10}]]
+       [:button {:disabled (empty? @i-db-hash)
+                 :on-click (fn []
+                             (rf/dispatch [:import-db @i-db-hash])
+                             (reset! i-db-hash "")
+                             (reset! active-dialog nil))}
+        [font-awesome {:name "download"}]]])))
+
 (defn main-panel []
-  [:div {:style {:display :flex :flex-direction :column}}
-   [matrix]
-   (if @create-dialog
-     [add-element-dialog]
-     [:button {:style    {:position :absolute :bottom 30 :right 30}
-               :on-click (fn [] (reset! create-dialog true))}
-      [font-awesome {:name "plus"}]])]
+  (let [active-dialog (r/atom nil)
+        toggle-fn (fn [key]
+                    (fn [] (if (= key @active-dialog) (reset! active-dialog nil) (reset! active-dialog key))))]
+    (fn []
+      [:div {:style {:display :flex :flex-direction :column}}
+       [matrix]
+       (cond
+         (= :add @active-dialog) [add-element-dialog active-dialog]
+         (= :share @active-dialog) [share-dialog active-dialog])
+       [:div.button-bar
+        [:button {:on-click (toggle-fn :share)}
+         [font-awesome {:name "share"}]]
+        [:button {:on-click (toggle-fn :add)}
+         [font-awesome {:name "plus"}]]]]))
   )

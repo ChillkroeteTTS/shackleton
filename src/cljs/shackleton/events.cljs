@@ -1,6 +1,7 @@
 (ns shackleton.events
   (:require [re-frame.core :as rf]
-            [shackleton.db :as db]))
+            [shackleton.db :as db]
+            [shackleton.hash :as hash]))
 
 (rf/reg-event-db
  ::initialize-db
@@ -22,3 +23,9 @@
                                     :x x
                                     :y y
                                     :link link}))))
+
+(rf/reg-event-db
+  :import-db
+  (fn [db [_ db-hash]]
+    (let [state (hash/decode db-hash)]
+      (cljs.reader/read-string state))))
