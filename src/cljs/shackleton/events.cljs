@@ -1,7 +1,8 @@
 (ns shackleton.events
   (:require [re-frame.core :as rf]
             [shackleton.db :as db]
-            [shackleton.hash :as hash]))
+            [shackleton.hash :as hash]
+            [cljs.reader :as cljsr]))
 
 (rf/reg-event-db
  ::initialize-db
@@ -32,5 +33,11 @@
 (rf/reg-event-db
   :import-db
   (fn [db [_ db-hash]]
-    (let [state (hash/decode db-hash)]
-      (cljs.reader/read-string state))))
+    (let [state (cljsr/read-string (hash/decode db-hash))]
+      (assoc :window-dimension (:window-dimension db) state)))) ;; retain window size
+
+(rf/reg-event-db
+  :set-window-dimension
+  (fn [db [_ dimension]]
+    (assoc db :window-dimension dimension)))
+

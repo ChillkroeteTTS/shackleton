@@ -12,4 +12,9 @@
  (fn [db]
    (hash/encode db)))
 
+(re-frame/reg-sub
+  :window-dimension
+ (fn [db]
+   (:window-dimension db)))
+
 

@@ -16,12 +16,15 @@
 (defn kart-y->svg [h y-max y] (* (- 1 (/ (+ y-max y) (* y-max 2))) h))
 
 (defn matrix []
-  (let [elements (rf/subscribe [:elements])]
+  (set! (.-onresize js/window) (fn [] (rf/dispatch [:set-window-dimension {:w js/innerWidth :h js/innerHeight}])))
+  (rf/dispatch [:set-window-dimension {:w js/innerWidth :h js/innerHeight}])
+  (let [elements (rf/subscribe [:elements])
+        window-dimension (rf/subscribe [:window-dimension])]
     (fn []
       (let [x-max (apply max (map (fn [el] (Math/abs (:x el))) @elements))
             y-max (apply max (map (fn [el] (Math/abs (:y el))) @elements))
-            w js/innerWidth
-            h (* svg-height js/innerHeight)
+            w (:w @window-dimension)
+            h (* svg-height (:h @window-dimension))
             hw (/ w 2)
             hh (/ h 2)
             x-max (* x-max 1.2)

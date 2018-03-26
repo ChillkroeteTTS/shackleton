@@ -8,7 +8,8 @@
               {:title "test2"
                :link  "http://dummmy2"
                :x     -30
-               :y     -150}]})
+               :y     -150}]
+   :window-dimension {:w 800 :h 600}})
 
 (def default-db
   (assoc default-dev-db :elements []))
