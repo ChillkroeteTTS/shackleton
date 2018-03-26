@@ -34,7 +34,7 @@
   :import-db
   (fn [db [_ db-hash]]
     (let [state (cljsr/read-string (hash/decode db-hash))]
-      (assoc :window-dimension (:window-dimension db) state)))) ;; retain window size
+      (assoc state :window-dimension (:window-dimension db))))) ;; retain window size
 
 (rf/reg-event-db
   :set-window-dimension
