@@ -1,7 +1,7 @@
 # Shackleton
 https://chillkroetetts.github.io/shackleton/
 
-Simple client based tool to compare key figures from e.g. articles.
+Simple web based tool to compare key figures from e.g. articles.
 Build entirely in Clojurescript with Reagent+Reframe.
 Named after the famous polar explorer Sir Ernest Henry Shackleton.
 
