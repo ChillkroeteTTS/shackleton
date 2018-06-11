@@ -23,11 +23,12 @@
 
 (rf/reg-event-db
   :add-el
-  (fn [db [_ title x y link]]
+  (fn [db [_ title x y z link]]
     (assoc db :elements
               (conj (:elements db) {:title title
                                     :x x
                                     :y y
+                                    :z z
                                     :link link}))))
 
 (rf/reg-event-db

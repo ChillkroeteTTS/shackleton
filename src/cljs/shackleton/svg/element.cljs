@@ -11,35 +11,40 @@
 
 (def font-awesome (r/adapt-react-class (aget js/window "deps" "react-fontawesome")))
 
-(defn tt-first-row [title show? el]
+(defn tt-first-row [title show? el txt-color]
   [:div.elem-headline
-   [:text title]
+   [:text {:style {:color txt-color}} title]
    (when @show?
      [:button {:on-click (fn [] (rf/dispatch [:delete-el el]))}
       [font-awesome {:name "times"}]])])
 
-(defn tooltip [{:keys [title link x y] :as el} show?]
-  [:foreignObject {:x 0 :y 0 :width info-box-w :height (if @show? 200 50)}
+(defn tooltip [{:keys [title link x y z] :as el} color-intensity show?]
+  (prn color-intensity)
+  [:foreignObject {:x     0 :y 0 :width info-box-w :height (if @show? 250 50)}
    [:div.dialog.element {:on-mouse-enter (fn [] (reset! show? true))
-                         :on-mouse-leave (fn [] (reset! show? false))}
-    [tt-first-row title show? el]
+                         :on-mouse-leave (fn [] (reset! show? false))
+                         :style          {:background-color (str "rgb(" (- 255 color-intensity) "," (- 255 color-intensity) "," 255 ")")}}
+    [tt-first-row title show? el (if (> color-intensity 125) :white :black)]
     (when @show?
       [:div {:style {:display :flex :flex-direction "column"}}
        [:text (str x)]
-       [:text (str y)]])]])
+       [:text (str y)]
+       [:text (str z)]])]])
 
 (defn pointing-lines [svgx svgy hw hh]
   [:g
    [:line {:x1 svgx :y1 svgy :x2 hw :y2 svgy :stroke "rgb(0,0,0)" :stroke-dasharray "10,10" :stroke-width info-box-marker-stroke}]
    [:line {:x1 svgx :y1 svgy :x2 svgx :y2 hh :stroke "rgb(0,0,0)" :stroke-dasharray "10,10" :stroke-width info-box-marker-stroke}]])
 
-(defn element [hw hh x->svg y->svg {:keys [title link x y] :as el}]
+(defn element [hw hh x->svg y->svg z->color {:keys [title link x y z] :as el}]
   (let [show? (r/atom false)]
-    (fn [hw hh x->svg y->svg {:keys [title link x y] :as el}]
+    (fn [hw hh x->svg y->svg z->color {:keys [title link x y z] :as el}]
+      (prn z)
       (let [svgx (x->svg x)
-            svgy (y->svg y)]
+            svgy (y->svg y)
+            color-intensity (z->color z)]
         [:g
          [pointing-lines svgx svgy hw hh]
          [:g {:transform (str "translate(" (- svgx info-box-hw) "," (- svgy 12) ")") :width info-box-w :height info-box-h}
-          [tooltip el show?]
+          [tooltip el color-intensity show?]
           ]]))))

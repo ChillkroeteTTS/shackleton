@@ -1,7 +1,6 @@
 button:focus {outline:0;}
 
 .element {
-  background-color: white;
   justify-content: flex-end;
 }
 
