@@ -2,6 +2,17 @@ button:focus {outline:0;}
 
 .element {
   justify-content: flex-end;
+  background-color: white;
+  box-sizing: border-box;
+  padding: 9px 17px 9px 17px;
+  display: flex;
+  flex-direction: column;
+  border: solid 1px rgb(240, 240, 240);
+}
+
+.element > .elem-colortop {
+  width: 100%;
+  height: 5px;
 }
 
 .element > .elem-headline {
@@ -16,7 +27,11 @@ button:focus {outline:0;}
   font-size: 6px;
   padding: 3px;
   width: 15px;
-  border-radius: 5px;
+  border-radius: 0px;
+}
+
+.element > .coords {
+  margin-top: 10px;
 }
 
 .menu {
@@ -32,7 +47,7 @@ button:focus {outline:0;}
   padding: 9px 17px 9px 17px;
   display: flex;
   flex-direction: column;
-  border: solid 1px rgb(186, 186, 186);
+  border: solid 1px rgb(200, 200, 200);
   border-radius: 8px;
 }
 

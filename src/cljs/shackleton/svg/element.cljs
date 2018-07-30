@@ -11,25 +11,25 @@
 
 (def font-awesome (r/adapt-react-class (aget js/window "deps" "react-fontawesome")))
 
-(defn tt-first-row [title show? el txt-color]
+(defn tt-first-row [title show? el]
   [:div.elem-headline
-   [:text {:style {:color txt-color}} title]
+   [:text title]
    (when @show?
-     [:button {:on-click (fn [] (rf/dispatch [:delete-el el]))}
+     [:div {:on-click (fn [] (rf/dispatch [:delete-el el]))}
       [font-awesome {:name "times"}]])])
 
 (defn tooltip [{:keys [title link x y z] :as el} color-intensity show?]
-  (prn color-intensity)
-  [:foreignObject {:x     0 :y 0 :width info-box-w :height (if @show? 250 50)}
-   [:div.dialog.element {:on-mouse-enter (fn [] (reset! show? true))
-                         :on-mouse-leave (fn [] (reset! show? false))
-                         :style          {:background-color (str "rgb(" (- 255 color-intensity) "," (- 255 color-intensity) "," 255 ")")}}
-    [tt-first-row title show? el (if (> color-intensity 125) :white :black)]
-    (when @show?
-      [:div {:style {:display :flex :flex-direction "column"}}
-       [:text (str x)]
-       [:text (str y)]
-       [:text (str z)]])]])
+  (let [background-color (str "rgb(" (- 255 color-intensity) "," (- 255 color-intensity) "," 255 ")")]
+    [:foreignObject {:x 0 :y 0 :width info-box-w :height (if @show? 250 50)}
+     [:div.element {:style {:background (str "linear-gradient(to bottom left, " background-color ", white, white)")}
+                           :on-mouse-enter (fn [] (reset! show? true))
+                           :on-mouse-leave (fn [] (reset! show? false))}
+      [tt-first-row title show? el]
+      (when @show?
+        [:div.coords {:style {:display :flex :flex-direction "column"}}
+         [:text (str "x: " x)]
+         [:text (str "y: " y)]
+         [:text (str "z: " z)]])]]))
 
 (defn pointing-lines [svgx svgy hw hh]
   [:g
@@ -39,7 +39,6 @@
 (defn element [hw hh x->svg y->svg z->color {:keys [title link x y z] :as el}]
   (let [show? (r/atom false)]
     (fn [hw hh x->svg y->svg z->color {:keys [title link x y z] :as el}]
-      (prn z)
       (let [svgx (x->svg x)
             svgy (y->svg y)
             color-intensity (z->color z)]
