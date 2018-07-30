@@ -44,6 +44,6 @@
             color-intensity (z->color z)]
         [:g
          [pointing-lines svgx svgy hw hh]
-         [:g {:transform (str "translate(" (- svgx info-box-hw) "," (- svgy 12) ")") :width info-box-w :height info-box-h}
+         [:g {:transform (str "translate(" (- svgx info-box-hw) "," (- svgy 20) ")") :width info-box-w :height info-box-h}
           [tooltip el color-intensity show?]
           ]]))))
